@@ -15,7 +15,7 @@ func getgo() {
 }
 
 func gofmt() {
-	err := exec.Command("go", "fmt").Run()
+	err := exec.Command("go", "fmt", "-s", "-w", ".").Run()
 	if err != nil {
 		fmt.Println()
 		return
