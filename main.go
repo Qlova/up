@@ -15,10 +15,18 @@ func getgo() {
 }
 
 func gofmt() {
-	err := exec.Command("go", "fmt", "-s", "-w", ".").Run()
+	err := exec.Command("gofmt", "-s", "-w", ".").Run()
 	if err != nil {
-		fmt.Println()
-		return
+		fmt.Println("The project didn't format, please fix any syntax errors before running up again.")
+		os.Exit(1)
+	}
+}
+
+func gobuild() {
+	err := exec.Command("go", "build").Run()
+	if err != nil {
+		fmt.Println("The project didn't build, please fix any compiler errors before running up again.")
+		os.Exit(1)
 	}
 }
 
@@ -47,17 +55,23 @@ func lazygit() {
 
 	err := exec.Command("lazygit").Run()
 	if err != nil {
-		fmt.Println("lazygit encountered an error, is this a Git repo?")
-		fmt.Println("If not, maybe you should report it... (https://github.com/jesseduffield/lazygit/issues)")
+		fmt.Println("lazygit encountered an error")
+		fmt.Println("Maybe you should report it... (https://github.com/jesseduffield/lazygit/issues)")
 	}
 }
 
 func main() {
+	if _, err := os.Stat(".git"); os.IsNotExist(err) {
+		fmt.Println("This is not a git repo, please create one with 'git init'")
+		return
+	}
+
 	if !exists("go") {
 		getgo()
 	}
 
 	gofmt()
+	gobuild()
 
 	//Open the best available git client.
 
