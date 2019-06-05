@@ -31,6 +31,14 @@ func goget(pkg string) {
 	}
 }
 
+func gitcola() {
+	err := exec.Command("git-cola").Run()
+	if err != nil {
+		fmt.Println("git-cola encountered an error")
+		fmt.Println("If not, maybe you should report it... (https://github.com/git-cola/git-cola/issues)")
+	}
+}
+
 func lazygit() {
 	if !exists("lazygit") {
 		fmt.Println("Please add $GOPATH/bin to your $PATH!")
@@ -48,10 +56,18 @@ func main() {
 	if !exists("go") {
 		getgo()
 	}
+
+	gofmt()
+
+	//Open the best available git client.
+
+	if exists("git-cola") {
+		gitcola()
+		return
+	}
+
 	if !exists("lazygit") {
 		goget("github.com/jesseduffield/lazygit")
 	}
-
-	gofmt()
 	lazygit()
 }
